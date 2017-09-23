@@ -1,4 +1,3 @@
-//TODO: add AI based on who got defeated
 //TODO: Night king army++ as defender died
 var YTK = YTK || {};
 
@@ -128,9 +127,18 @@ YTK.rpg = (function() {
     defenderInfo.hp = dataObj.hp;
     defenderInfo.ap = dataObj.ap;
   },
+  hideInstruction = function(id) {
+    $('.instruction-' + id).addClass('hidden');
+  },
+  showInstruction = function(id) {
+    $('.instruction-' + id).removeClass('hidden');
+  }
   selectedChar = function($picked) {
     var cardID  = parseInt($picked.attr('data-id')),
         cardObj = cards[cardID];
+
+    hideInstruction(1);
+    showInstruction(2);
 
     hideCharColumns();
 
@@ -225,6 +233,7 @@ YTK.rpg = (function() {
       var $this = $(this),
           enemyID = $this.attr('data-id');
 
+      hideInstruction(2);
       $this.closest('.card-col').removeClass('available');
       $this.closest('.card-col').hide();
       setDefender(enemyID);
@@ -318,17 +327,17 @@ YTK.rpg = (function() {
 
       playerInfo.ap = playerInfo.ap * 2;
 
-      console.log('info', playerInfo, defenderInfo);      
-
       updateArmySize($defenderCard, defenderArmy);
       updateArmySize($heroCard, heroArmy);
 
       if (isDead(playerInfo) && isDead(defenderInfo)) {
+        showInstruction(2);
         hideAttackBtn();
         gameLose();
       }
       else if (isDead(defenderInfo)) {
         $defenderCard.addClass('hidden');
+        showInstruction(2);
         hideAttackBtn();
         gameWon();
 
@@ -347,7 +356,6 @@ YTK.rpg = (function() {
       $('.modal-title', '#endGameModal').html('You Won!');
       $('.ending-picture').addClass('card-' + playerInfo.id);
 
-console.log('have enemy?', getAvailableEnemies());
       if (getAvailableEnemies() > 0) {
         $('#end-speech').html(defaults.won);
         setupPlayAgainBtn(true);
@@ -382,7 +390,7 @@ console.log('have enemy?', getAvailableEnemies());
   },
   bindShareBtn = function () {
     $('.btn-fb-share').on('click', function() {
-      window.location.href = "https://www.facebook.com/sharer/sharer.php?u=https://yankwong.github.io/Hangman-Game/";
+      window.location.href = "https://www.facebook.com/sharer/sharer.php?u=https://yankwong.github.io/week-4-game/";
     })
   }
   initPage = function() {
